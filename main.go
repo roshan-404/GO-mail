@@ -1,12 +1,13 @@
 package main
 
 import (
-	"log"
-	"os"
-
 	"go-mail/config"
 	"go-mail/model"
 	"go-mail/routes"
+	socket "go-mail/webSocket"
+	"log"
+	"net/http"
+	"os"
 
 	"github.com/joho/godotenv"
 
@@ -28,6 +29,7 @@ import (
 // @BasePath /api/v1
 
 func main() {
+	
 	err := godotenv.Load(".env")
 	if err != nil {
 		log.Fatalf("Error loading .env file")
@@ -39,6 +41,11 @@ func main() {
 	r := routes.SetupRouter()
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	http.Handle("/socket.io/", socket.Socket())
 
+	fs := http.FileServer(http.Dir("static"))
+	http.Handle("/", fs)
+	
+	log.Fatal(http.ListenAndServe(":4000", nil))
 	r.Run(":" + os.Getenv("LOCAL_PORT"))
 }

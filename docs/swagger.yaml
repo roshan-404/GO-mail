@@ -1,0 +1,121 @@
+basePath: /api/v1
+definitions:
+  model.EmailTemplate:
+    properties:
+      body:
+        type: string
+      subject:
+        type: string
+      to:
+        items:
+          type: string
+        type: array
+    type: object
+  model.User:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+host: localhost:3000
+info:
+  contact:
+    email: roshankumarojha04@gmail.com
+    name: Roshan Kumar Ojha
+  description: A service where users can register and send an email & do live chat.
+  termsOfService: http://swagger.io/terms/
+  title: Email services API Documentation.
+  version: 1.0.0
+paths:
+  /compose:
+    post:
+      consumes:
+      - application/json
+      description: You need to signedIn and give a Token in headers then "Send Email"
+        will execute.
+      parameters:
+      - description: Send an email
+        in: body
+        name: template
+        required: true
+        schema:
+          $ref: '#/definitions/model.EmailTemplate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.EmailTemplate'
+        "401":
+          description: Unauthorized
+          schema:
+            type: object
+      summary: Varify token & send an email.
+      tags:
+      - Email Compose
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: A registered user can login with their credentials.
+      parameters:
+      - description: LogIn User
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/model.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+        "401":
+          description: Unauthorized
+          schema:
+            type: object
+      summary: LogIn with credentials.
+      tags:
+      - LogIn
+  /refreshToken:
+    post:
+      consumes:
+      - application/json
+      description: You need to signedIn and give a Token in headers then "Refresh
+        Token" will execute.
+      produces:
+      - application/json
+      summary: Varify token & create a new token.
+      tags:
+      - Refresh token
+  /signup:
+    post:
+      consumes:
+      - application/json
+      description: A new user can sign up with their email & password.
+      parameters:
+      - description: Sign Up User
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/model.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+        "401":
+          description: Unauthorized
+          schema:
+            type: object
+      summary: Sign Up with credentials.
+      tags:
+      - Sign Up
+swagger: "2.0"

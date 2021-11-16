@@ -2,12 +2,14 @@ package routes
 
 import (
 	"go-mail/controllers"
+
 	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	cors "github.com/itsjamie/gin-cors"
 )
+
 
 func SetupRouter() *gin.Engine {
 	router := gin.Default()

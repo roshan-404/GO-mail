@@ -32,3 +32,5 @@ func SendEmail(delivery rmq.Delivery) {
 
 	delivery.Ack()
 }
+
+
