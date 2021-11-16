@@ -7,17 +7,19 @@ import (
 	"os"
 	"time"
 
+	"github.com/gin-gonic/gin"
+
 	"github.com/dgrijalva/jwt-go"
 )
 
 var td = &M.TokenDetails{}
 
 func CreateToken(email string) (*M.TokenDetails, error) {
-	// min, _ := str2duration.ParseDuration(os.Getenv("EXPIRE_ACCESS_SECRET"))
 	td.AtExpires = time.Now().Add(time.Minute * 10).Unix()
 	td.RtExpires = time.Now().Add(time.Minute * 20).Unix()
 
 	var err error
+	
 	//Creating Access Token
 	atClaims := jwt.MapClaims{}
 	atClaims["expiresAt"] = td.AtExpires
@@ -53,8 +55,7 @@ func VerifyAccessToken(req *http.Request) (jwt.Claims, string) {
 		// extract expiresTime from token
 		ext := token.Claims.(jwt.MapClaims)
 		expiresTime := ext["expiresAt"]
-		// ext := tokenInfo.(jwt.MapClaims)
-		// userEmail := fmt.Sprintf("%v", ext["email"])
+
 
 		if int64(expiresTime.(float64)) < time.Now().Unix() {
 			return nil, "Token expired!"
@@ -65,8 +66,8 @@ func VerifyAccessToken(req *http.Request) (jwt.Claims, string) {
 	}
 }
 
-func VerifyRefreshToken(req *http.Request) (*M.TokenDetails, string) {
-	if data := req.Header.Get("Authorization"); data != "" {
+func VerifyRefreshToken(ctx *gin.Context) (*M.TokenDetails, string) {
+	if data := ctx.Request.Header["Authorization"][0]; data != "" {
 		token, err := verifyToken(data, []byte(os.Getenv("REFRESH_SECRET")))
 		if err != "" {
 			return nil, err

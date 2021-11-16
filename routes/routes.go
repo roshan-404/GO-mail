@@ -1,6 +1,7 @@
-package route
+package routes
 
 import (
+	"go-mail/controllers"
 	"os"
 	"time"
 
@@ -9,17 +10,17 @@ import (
 )
 
 func SetupRouter() *gin.Engine {
-	r := gin.Default()
+	router := gin.Default()
 
 	// Api Prefix
 	apiPrefix := os.Getenv("API_PREFIX")
 	// version 1
 	apiVersion := os.Getenv("API_VERSION")
 
-	apiV1 := r.Group("/" + apiPrefix + "/" + apiVersion)
+	apiV1 := router.Group("/" + apiPrefix + "/" + apiVersion)
 
 	// Apply the middleware to the router (works with groups too)
-	r.Use(cors.Middleware(cors.Config{
+	router.Use(cors.Middleware(cors.Config{
 		Origins:         "*",
 		Methods:         "GET, PUT, POST, DELETE",
 		RequestHeaders:  "Origin, Authorization, Content-Type",
@@ -29,12 +30,19 @@ func SetupRouter() *gin.Engine {
 		ValidateHeaders: false,
 	}))
 	
-	auth := apiV1.Group("/users")
+	auth := apiV1.Group("/")
 	{
-		auth.POST("login", controllers.Login)
-		// auth.POST("/", controller.CreateUser)
-		// auth.POST("/:id", controller.GetUserByID)
+		auth.POST("/login", controllers.LogIn)
+		auth.POST("/signup",controllers.SignUp)
 	}
 
-	return r
+	secure := apiV1.Group("/")
+	{
+		secure.POST("/refreshToken", controllers.RefreshToken)
+		secure.POST("/compose", controllers.EmailComposer)
+	}
+	
+	
+
+	return router
 }
