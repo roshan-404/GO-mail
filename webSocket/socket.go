@@ -1,7 +1,6 @@
 package socket
 
 import (
-	"fmt"
 	"log"
 
 	socketio "github.com/googollee/go-socket.io"
@@ -9,67 +8,32 @@ import (
 
 func Socket() *socketio.Server {
 
-	// server, err := socketio.NewServer(nil)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
+	server, err := socketio.NewServer(nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+	// github.com/googollee/go-socket.io@v1.0.1
 
-	// server.On("connection", func(so socketio.Socket) {
-	// 	log.Println("New connection")
+	server.On("connection", func(so socketio.Socket) {
+		log.Println("New connection")
 
-	// 	so.Join("chat")
+		so.Join("chat")
 
-	// 	so.On("message", func(msg string) {
-	// 		// return that message
-	// 		so.Emit("message", msg)
+		so.On("message", func(msg string) {
+			// return that message
+			so.Emit("message", msg)
 
-	// 		so.BroadcastTo("chat", "message", msg)
-	// 	})
+			so.BroadcastTo("chat", "message", msg)
+		})
 
-	// 	so.On("disconnection", func() {
-	// 		log.Println("Connection closed")
-	// 	})
-	// })
-
-	// server.On("error", func(so socketio.Socket, err error) {
-	// 	log.Println("error:", err)
-	// })
-
-	server := socketio.NewServer(nil)
-
-	server.OnConnect("/", func(s socketio.Conn) error {
-		s.SetContext("")
-		log.Println("connected:", s.ID())
-		s.Join("bcast")
-		return nil
+		so.On("disconnection", func() {
+			log.Println("Connection closed")
+		})
 	})
 
-	server.OnEvent("/", "notice", func(s socketio.Conn, msg string) {
-		log.Println("notice:", msg)
-		server.BroadcastToRoom("", "bcast", "reply", msg)
+	server.On("error", func(so socketio.Socket, err error) {
+		log.Println("error:", err)
 	})
-
-	server.OnEvent("/chat", "msg", func(s socketio.Conn, msg string) string {
-		s.SetContext(msg)
-		return "recv " + msg
-	})
-
-	server.OnError("/", func(s socketio.Conn, e error) {
-		log.Println("meet error:", e)
-	})
-
-	server.OnDisconnect("/", func(s socketio.Conn, reason string) {
-		log.Println("closed", reason)
-	})
-
-	go func() {
-		if err := server.Serve(); err != nil {
-			fmt.Println(err)
-			log.Fatalf("socketio listen error: %s\n", err)
-		}
-	}()
-	defer server.Close()
-
 
 	return server
 }
