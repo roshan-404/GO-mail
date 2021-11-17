@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	queue "go-mail/hermes-mail"
 	"go-mail/model"
 	repo "go-mail/repository"
 	"go-mail/utils"
@@ -86,10 +87,10 @@ func EmailComposer(ctx *gin.Context) {
 		return
 	}
 
-	utils.CreateQueue()
+	queue.CreateQueue()
 
 	s := gocron.NewScheduler()
-	s.Every(1).Day().At("11:24").Do(utils.Dispatch, T)
+	s.Every(1).Day().At("09:38").Do(queue.Dispatch, T)
 	s.Start()
 	log.Println("Email in progress....")
 	ctx.JSON(http.StatusOK,Response{Message: "Email in progress", Data: nil, Success: true})
