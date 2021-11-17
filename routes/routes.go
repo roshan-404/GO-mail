@@ -3,6 +3,7 @@ package routes
 import (
 	"go-mail/controllers"
 
+	socket "go-mail/webSocket"
 	"os"
 	"time"
 
@@ -44,7 +45,8 @@ func SetupRouter() *gin.Engine {
 		secure.POST("/compose", controllers.EmailComposer)
 	}
 	
-	
+	router.GET("/socket.io/", gin.WrapH(socket.Socket()))
+	router.POST("/socket.io/",gin.WrapH(socket.Socket()))
 
 	return router
 }

@@ -112,7 +112,7 @@ require (
 )
 
 require (
-	github.com/googollee/go-socket.io v1.0.1
+	github.com/googollee/go-socket.io v1.6.1
 	github.com/gorilla/websocket v1.4.2 // indirect
 )
 

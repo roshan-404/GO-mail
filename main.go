@@ -5,9 +5,9 @@ import (
 	"go-mail/model"
 	"go-mail/routes"
 
-	// socket "go-mail/webSocket"
+	socket "go-mail/webSocket"
 	"log"
-	// "net/http"
+	"net/http"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -42,12 +42,11 @@ func main() {
 	r := routes.SetupRouter()
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	// http.Handle("/socket.io/", socket.Socket())
-
-	// fs := http.FileServer(http.Dir("static"))
-	// http.Handle("/", fs)
+	http.Handle("/socket.io/", socket.Socket())
 	
-	// log.Fatal(http.ListenAndServe(":4000", nil))
+
+	
+	r.StaticFS("/public", http.Dir("static"))
 	
 	r.Run(":" + os.Getenv("LOCAL_PORT"))
 }

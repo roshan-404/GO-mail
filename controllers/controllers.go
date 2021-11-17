@@ -34,10 +34,11 @@ func LogIn(ctx *gin.Context) {
 
 	res := repo.SignIn(&user)
 	if !res.Success {
+		utils.Logger(res.Message)
 		ctx.JSON(http.StatusUnauthorized, res)
 		return
 	}
-
+	utils.Logger(res.Message)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -61,10 +62,12 @@ func SignUp(ctx *gin.Context) {
 
 	res := repo.SignUp(&user)
 	if !res.Success  {
+		utils.Logger(res.Message)
 		ctx.JSON(http.StatusNotFound, res)
 		return
 	}
 
+	utils.Logger(res.Message)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -108,6 +111,7 @@ func RefreshToken(ctx *gin.Context) {
 	td, err := utils.VerifyRefreshToken(ctx)
 
 	if err != "" {
+		utils.Logger(err)
 		ctx.JSON(http.StatusNotFound, Response{Message: err, Data: nil, Success: false})
 		return
 	}
@@ -116,6 +120,6 @@ func RefreshToken(ctx *gin.Context) {
 		"access_token":  td.AccessToken,
 		"refresh_token": td.RefreshToken,
 	}
-
+	utils.Logger("new refresh token created")
 	ctx.JSON(http.StatusOK, Response{Message: "Successfully refresh token.", Data: tokens, Success: true})
 }

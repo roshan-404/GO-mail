@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"go-mail/model"
+	"go-mail/utils"
 	"io/ioutil"
 	"log"
 	"net/mail"
@@ -98,6 +99,7 @@ func SendEmail(delivery rmq.Delivery) {
 			}
 		}
 		log.Println("Email sent successfully.")
+		utils.Logger("A new Email has been sent successfully.")
 	}
 }
 

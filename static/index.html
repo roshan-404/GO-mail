@@ -62,20 +62,23 @@
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
-        const socket = io("http://localhost:4000/socket.io/");
-        var s2 = io("/");
+         const socket = io("http://localhost:3000/socket.io/");
 
-        socket.on('message', function (msg) {
-            $('#messages').append($('<li>').text(msg));
-        });
+    // get the name of the client
+    const name = prompt("Please enter your name");
 
-        $('form').submit(function () {
-            socket.emit('message', $('#m').val());
-            console.log("Send :- " + $('#m').val())
-            
-            $('#m').val('');
-            return false;
-        });
+    socket.emit("message", name + " join the chat room.")
+
+    socket.on('message', function (msg) {
+        $('#messages').append($('<li>').text(msg));
+    });
+
+    $('form').submit(function () {
+        socket.emit('message', name + " : " + $('#m').val());
+
+        $('#m').val('');
+        return false;
+    });
     </script>
 </body>
 
