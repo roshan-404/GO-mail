@@ -3,3 +3,7 @@
 
 # Dependency directories
 flat
+
+#log files 
+logfile.log
+
