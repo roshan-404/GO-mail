@@ -2,6 +2,7 @@ package routes
 
 import (
 	"go-mail/controllers"
+	"net/http"
 
 	socket "go-mail/webSocket"
 	"os"
@@ -22,6 +23,9 @@ func SetupRouter() *gin.Engine {
 
 	apiV1 := router.Group("/" + apiPrefix + "/" + apiVersion)
 
+	router.GET("/", func(ctx *gin.Context){
+		ctx.JSON(http.StatusOK, "Welcome to Go-mail")
+	})
 	// Apply the middleware to the router (works with groups too)
 	router.Use(cors.Middleware(cors.Config{
 		Origins:         "*",
