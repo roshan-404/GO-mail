@@ -48,5 +48,5 @@ func main() {
 	
 	r.StaticFS("/public", http.Dir("static"))
 	
-	r.Run(":" + os.Getenv("LOCAL_PORT"))
+	r.Run(":" + os.Getenv("PORT"))
 }
